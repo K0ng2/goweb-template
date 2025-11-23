@@ -1,0 +1,54 @@
+[tools]
+bun = "latest"
+go = "latest"
+"go:github.com/go-jet/jet/v2/cmd/jet" = "latest"
+"go:github.com/swaggo/swag/cmd/swag" = "latest"
+
+[env]
+CGO_ENABLED = 0
+mise.file = ".env" # load vars from a dotenv file
+
+[tasks.build-server]
+dir = "{{ config_root }}/backend"
+# sources = ["**/*.go"]
+run = "go build -ldflags=\"-s -w\" -v -o dist/app"
+
+[tasks.run-server]
+depends = ["build-server"]
+dir = "{{ config_root }}/backend"
+run = "dist/app"
+sources = ["**/*.go"]
+description = "Run the Go server"
+
+[tasks.dev]
+dir = "{{ config_root }}/web"
+description = "Start development server"
+run = "bun --bun run dev --public"
+
+[tasks.generate]
+run = "bun run generate"
+dir = "{{ config_root }}/web"
+
+[tasks.swag]
+dir = "{{ config_root }}/backend"
+run = "swag init -g server/server.go -o ./docs --ot go"
+description = "Generate Swagger docs"
+
+[tasks.version-bump]
+usage = '''
+arg "<part>" help="Part to bump" default="patch" {
+  choices "major" "minor" "patch" "prerelease"
+}
+'''
+description = "Bump version"
+dir = "{{ config_root }}/nuxt"
+run = "bunx bumpp -y --release ${usage_part?}"
+
+[tasks.jet]
+usage = '''
+arg "<source>" help="Database source type" default="sqlite" {
+	choices "sqlite" "postgres" "mysql" "cockroachdb" "mariadb"
+}
+arg "<dsn>" help="Data Source Name for the database" default="db.sqlite"
+'''
+run = "jet -source=${usage_source?} -dsn=${usage_dsn?} -model-json-tag=snake-case -path=./gen"
