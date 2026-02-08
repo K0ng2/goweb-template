@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "vue.volar",
+    "bradlc.vscode-tailwindcss",
+    "hverlin.mise-vscode",
+    "golang.go",
+    "streetsidesoftware.code-spell-checker",
+    "tombi-toml.tombi"
+  ]
+}
