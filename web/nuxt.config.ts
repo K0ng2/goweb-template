@@ -10,6 +10,9 @@ export default defineNuxtConfig({
 	compatibilityDate: '2025-07-15',
 	devtools: { enabled: true },
 	ssr: false,
+	css: [
+		'@/assets/css/main.css',
+	],
 	vite: {
 		define: {
 			__APP_VERSION__: JSON.stringify(packageJson.version),
@@ -17,6 +20,9 @@ export default defineNuxtConfig({
 		plugins: [
 			tailwindcss(),
 		],
+		server: {
+			allowedHosts: true
+		}
 	},
 	app: {
 		head: {
@@ -58,7 +64,12 @@ export default defineNuxtConfig({
 		},
 		registerType: 'autoUpdate',
 	},
+	icon: {
+		mode: 'css',
+		cssLayer: 'base',
+	},
 	modules: [
 		'@vite-pwa/nuxt',
+		'@nuxt/icon',
 	],
 })
